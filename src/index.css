@@ -10,3 +10,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.active {
+  background-color: #b1bcce;
+}
+
+.disabled {
+  color: #9ca3af;
+  background-color: #e5e7eb;
+  pointer-events: none;
+}
