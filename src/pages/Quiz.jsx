@@ -3,25 +3,27 @@ import { useNavigate } from "react-router-dom"
 import useLocal from "@util/useLocal"
 import getLevels from "@data/rounds"
 
-const LEVELS = getLevels()
-
+const MAX_LEVEL = 5
 export default function Quiz () {
-  const [score, setScore] = useLocal("user-score", 0)
+  const [userData, setUserData] = useLocal("user-data", {})
   const [currentLevel, setCurrentLevel] = useState(0)
-  const [level, setLevel] = useState(LEVELS[currentLevel])
+  const [level, setLevel] = useState(getLevels(currentLevel))
 
   const navigate = useNavigate()
   const optionsRef = useRef(null)
   const nextButton = useRef(null)
+  const resultButton = useRef(null)
 
   function verifyAnswer (button, choice) {
     if (choice === level.answer) {
       button.classList.add("bg-green-500")
       nextButton.current.classList.remove("disabled")
       nextButton.current.classList.add("active")
-      setScore(score + level.points)
+      setUserData({ ...userData, score: userData.score + level.points })
     } else {
       button.classList.add("bg-red-500")
+      resultButton.current.classList.remove("disabled")
+      resultButton.current.classList.add("active")
     }
   }
 
@@ -49,14 +51,18 @@ export default function Quiz () {
     cleanRound()
   }
 
+  function handleResult () {
+    navigate("/result")
+  }
+
   useEffect(() => {
-    if (currentLevel === LEVELS.length) { navigate("/result") }
-    setLevel(LEVELS[currentLevel])
+    if (currentLevel === MAX_LEVEL) { navigate("/result") }
+    setLevel(getLevels(currentLevel))
   }, [currentLevel])
 
   return (
     <section className="flex flex-col gap-10 p-10">
-      <p>Question { currentLevel + 1 } of { LEVELS.length }</p>
+      <p>Question { currentLevel + 1 } of { MAX_LEVEL }</p>
       <h1>{ level.question }</h1>
       <ul ref={ optionsRef } className="self-center grid grid-cols-2 w-full max-w-2xl gap-4">
         {
@@ -75,12 +81,17 @@ export default function Quiz () {
         }
       </ul>
       <button
-        
         ref={ nextButton }
         type="button"
         onClick={ handleNextLevel }
         className="disabled self-center py-2 px-4 w-full max-w-md border-2"
       >Next</button>
+      <button
+        ref={ resultButton }
+        type="button"
+        onClick={ handleResult }
+        className="disabled self-center py-2 px-4 w-full max-w-md border-2"
+      >Go to Results</button>
     </section>
   )
 }
