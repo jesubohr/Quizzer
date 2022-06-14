@@ -10,6 +10,11 @@ const EASY = [
     answer: "7",
     options: ["5", "7", "6", "8"],
     points: 10,
+  },
+  {
+    question: 'Who painted the Mona Lisa?',
+    answer: "Leonardo da Vinci",
+    options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "SandroBotticelli"],
   }
 ]
 const MEDIUM = [
@@ -37,6 +42,11 @@ const MEDIUM = [
     options: ["John Adams", "Thomas Jefferson", "George Washington", "James Madison"],
     points: 100,
   },
+  {
+    question: "What animal Class does dogs belongs to?",
+    answer: "Mammal",
+    options: ["Mammal", "Bird", "Reptile", "Fish"],
+  }
 ]
 const HARD = [
   {
@@ -46,11 +56,16 @@ const HARD = [
     points: 1000,
   },
   {
-    question: "What was the name of the last Russian Czar (Emperor)?",
+    question: "Who was the last Russian Czar (Emperor)?",
     answer: "Nikolai II Alexandrovich",
     options: ["Ivan III Vasilyevich", "Yuriy Danilovich", "Nikolai II Alexandrovich", "Kirill Vladimirovich"],
     points: 1000,
   },
+  {
+    question: "Which year was the first World Cup?",
+    answer: "1930",
+    options: ["1930", "1932", "1934", "1936"],
+  }
 ]
 const EXPERT = [
   {
