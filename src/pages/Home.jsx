@@ -6,12 +6,12 @@ export default function Home () {
   const [userData, setUserData] = useLocal("user-data", {})
 
   function handleChange ({ target }) {
-    const user = { name: target.value, score: 0 }
+    const user = { ...userData, name: target.value }
     setUserData(user)
   }
 
   useEffect(() => {
-    setUserData({ name: "", score: 0 })
+    setUserData({ name: "", score: 0, completed: false })
   }, [])
 
   return (

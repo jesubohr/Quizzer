@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import useLocal from "@util/useLocal"
 
 export default function Result () {
   const [userHistory, setUserHistory] = useLocal("user-history", [])
   const [userData, setUserData] = useLocal("user-data", {})
-  const [score, setScore] = useState(userData.score)
+  const userScore = userData.score
 
   useEffect(() => {
-    //setUserHistory([...userHistory, userData])
+    if(userData.completed) {
+      setUserHistory([...userHistory, userData])
+      setUserData({ name: "", score: 0, completed: false })
+    }
   }, [])
 
   return (
@@ -16,8 +19,8 @@ export default function Result () {
       <div>
         <h1>Results</h1>
         {
-          score > 0
-            ? <p>You have scored { score } points</p>
+          userScore > 0
+            ? <p>You have scored { userScore } points</p>
             : <p>You have 0 points</p>
         }
       </div>

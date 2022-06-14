@@ -4,6 +4,11 @@ import useLocal from "@util/useLocal"
 import getLevels from "@data/rounds"
 
 const MAX_LEVEL = 5
+const updateScore = (score, points) => score + Math.floor(points * Math.random())
+const addClass = (element, className) => element.classList.add(className)
+const removeClass = (element, className) => element.classList.remove(className)
+
+
 export default function Quiz () {
   const [userData, setUserData] = useLocal("user-data", {})
   const [currentLevel, setCurrentLevel] = useState(0)
@@ -16,34 +21,44 @@ export default function Quiz () {
 
   function verifyAnswer (button, choice) {
     if (choice === level.answer) {
-      button.classList.add("bg-green-500")
-      nextButton.current.classList.remove("disabled")
-      nextButton.current.classList.add("active")
-      setUserData({ ...userData, score: userData.score + level.points })
+      addClass(button, "bg-green-500")
+      removeClass(nextButton.current, "disabled")
+      addClass(nextButton.current, "active")
+
+      setUserData({
+        ...userData,
+        score: updateScore(userData.score, level.points)
+      })
     } else {
-      button.classList.add("bg-red-500")
-      resultButton.current.classList.remove("disabled")
-      resultButton.current.classList.add("active")
+      addClass(button, "bg-red-500")
+      removeClass(resultButton.current, "hidden")
+      setUserData({ ...userData, completed: true })
+    }
+
+    if (currentLevel + 1 === MAX_LEVEL) {
+      setUserData({ ...userData, completed: true })
+      removeClass(resultButton.current, "hidden")
+      addClass(nextButton.current, "hidden")
     }
   }
 
   function deactivateOptions (clickedButton) {
     const options = Array.from(optionsRef.current.children)
-    options.forEach(option => {
-      if (option.firstChild !== clickedButton) {
-        option.firstChild.classList.add("disabled")
+    options.forEach(({ firstChild }) => {
+      if (firstChild !== clickedButton) {
+        addClass(firstChild, "disabled")
       }
     })
   }
 
   function cleanRound () {
     const options = Array.from(optionsRef.current.children)
-    options.forEach(option => {
-      option.firstChild.classList.remove("bg-green-500")
-      option.firstChild.classList.remove("bg-red-500")
-      option.firstChild.classList.remove("disabled")
+    options.forEach(({ firstChild }) => {
+      removeClass(firstChild, "bg-green-500")
+      removeClass(firstChild, "bg-red-500")
+      removeClass(firstChild, "disabled")
     })
-    nextButton.current.classList.add("disabled")
+    addClass(nextButton.current, "disabled")
   }
 
   function handleNextLevel () {
@@ -56,8 +71,9 @@ export default function Quiz () {
   }
 
   useEffect(() => {
-    if (currentLevel === MAX_LEVEL) { navigate("/result") }
-    setLevel(getLevels(currentLevel))
+    if (currentLevel !== MAX_LEVEL) {
+      setLevel(getLevels(currentLevel))
+    }
   }, [currentLevel])
 
   return (
@@ -90,7 +106,7 @@ export default function Quiz () {
         ref={ resultButton }
         type="button"
         onClick={ handleResult }
-        className="disabled self-center py-2 px-4 w-full max-w-md border-2"
+        className="hidden active self-center py-2 px-4 w-full max-w-md border-2"
       >Go to Results</button>
     </section>
   )
