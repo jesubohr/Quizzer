@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom"
 import useLocal from "@util/useLocal"
 import getLevels from "@data/rounds"
 
+import Section from "@comp/Section"
+import Title from "@comp/Title"
+import Options from "@comp/Options"
+import Button from "@comp/Button"
+
 const MAX_LEVEL = 5
 const updateScore = (score, points) => score + Math.floor(points * Math.random())
 const addClass = (element, className) => element.classList.add(className)
@@ -22,8 +27,8 @@ export default function Quiz () {
   function verifyAnswer (button, choice) {
     if (choice === level.answer) {
       addClass(button, "bg-green-500")
+      addClass(button, "border-green-500")
       removeClass(nextButton.current, "disabled")
-      addClass(nextButton.current, "active")
 
       setUserData({
         ...userData,
@@ -31,6 +36,7 @@ export default function Quiz () {
       })
     } else {
       addClass(button, "bg-red-500")
+      addClass(button, "border-red-500")
       removeClass(resultButton.current, "hidden")
       setUserData({ ...userData, completed: true })
     }
@@ -42,21 +48,23 @@ export default function Quiz () {
     }
   }
 
-  function deactivateOptions (clickedButton) {
+  function deactivateOptions (clicked) {
     const options = Array.from(optionsRef.current.children)
-    options.forEach(({ firstChild }) => {
-      if (firstChild !== clickedButton) {
-        addClass(firstChild, "disabled")
+    options.forEach(option => {
+      if (option !== clicked) {
+        addClass(option, "disabled")
       }
     })
   }
 
   function cleanRound () {
     const options = Array.from(optionsRef.current.children)
-    options.forEach(({ firstChild }) => {
-      removeClass(firstChild, "bg-green-500")
-      removeClass(firstChild, "bg-red-500")
-      removeClass(firstChild, "disabled")
+    options.forEach(option => {
+      removeClass(option, "bg-green-500")
+      removeClass(option, "border-green-500")
+      removeClass(option, "bg-red-500")
+      removeClass(option, "border-red-500")
+      removeClass(option, "disabled")
     })
     addClass(nextButton.current, "disabled")
   }
@@ -77,37 +85,35 @@ export default function Quiz () {
   }, [currentLevel])
 
   return (
-    <section className="flex flex-col gap-10 p-10">
-      <p>Question { currentLevel + 1 } of { MAX_LEVEL }</p>
-      <h1>{ level.question }</h1>
-      <ul ref={ optionsRef } className="self-center grid grid-cols-2 w-full max-w-2xl gap-4">
+    <Section>
+      <p className="text-title text-lg">Question { currentLevel + 1 } of { MAX_LEVEL }</p>
+      <Title.Sub className="font-semibold">{ level.question }</Title.Sub>
+      <Options refr={ optionsRef }>
         {
           level.options.map((option, index) => (
-            <li key={ index }>
-              <button onClick={
+            <Options.Option
+              key={ index }
+              option={ option }
+              onClick={
                 ({ target }) => {
                   verifyAnswer(target, option)
                   deactivateOptions(target)
                 }
               }
-                className="py-2 px-4 w-full border-2"
-              >{ option }</button>
-            </li>
+            />
           ))
         }
-      </ul>
-      <button
-        ref={ nextButton }
-        type="button"
+      </Options>
+      <Button
+        refr={ nextButton }
         onClick={ handleNextLevel }
-        className="disabled self-center py-2 px-4 w-full max-w-md border-2"
-      >Next</button>
-      <button
-        ref={ resultButton }
-        type="button"
+        className="disabled"
+      >Next</Button>
+      <Button
+        refr={ resultButton }
         onClick={ handleResult }
-        className="hidden active self-center py-2 px-4 w-full max-w-md border-2"
-      >Go to Results</button>
-    </section>
+        className="hidden"
+      >Go to Results</Button>
+    </Section>
   )
 }

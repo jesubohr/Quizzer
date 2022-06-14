@@ -1,6 +1,10 @@
 import { useEffect } from "react"
-import { Link } from "react-router-dom"
 import useLocal from "@util/useLocal"
+
+import Section from "@comp/Section"
+import Title from "@comp/Title"
+import History from "@comp/History"
+import Button from "@comp/Button"
 
 export default function Result () {
   const [userHistory, setUserHistory] = useLocal("user-history", [])
@@ -8,38 +12,31 @@ export default function Result () {
   const userScore = userData.score
 
   useEffect(() => {
-    if(userData.completed) {
+    if (userData.completed) {
       setUserHistory([...userHistory, userData])
       setUserData({ name: "", score: 0, completed: false })
     }
   }, [])
 
   return (
-    <section className="flex flex-col gap-5">
-      <div>
-        <h1>Results</h1>
-        {
-          userScore > 0
-            ? <p>You have scored { userScore } points</p>
-            : <p>You have 0 points</p>
-        }
-      </div>
-      <div className="self-center">
-        <h3 className="mb-3 text-2xl font-bold">History</h3>
-        <ul className="flex flex-col gap-5">
+    <Section>
+      <Section.Sub>
+        <Title>Results</Title>
+        <Title.Sub>
           {
-            userHistory.map(({ name, score }, index) => (
-              <li key={ index }>
-                <p className="text-lg font-medium">{ name }</p>
-                <p className="font-light">{ score } points</p>
-              </li>
-            ))
+            userScore > 0
+              ? `You have scored ${ userScore } points`
+              : `You have 0 points`
           }
-        </ul>
-      </div>
-      <Link to="/" className="self-center py-2 px-4 border-2">
+        </Title.Sub>
+      </Section.Sub>
+      <Section.Sub className="mt-10">
+        <Title.Sub className="text-2xl font-semibold">History</Title.Sub>
+        <History history={ userHistory } />
+      </Section.Sub>
+      <Button to="/">
         Start again
-      </Link>
-    </section>
+      </Button>
+    </Section>
   )
 }

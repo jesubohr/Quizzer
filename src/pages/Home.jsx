@@ -1,13 +1,29 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 import useLocal from "@util/useLocal"
-import { NavLink } from "react-router-dom"
+
+import Section from "@comp/Section"
+import Title from "@comp/Title"
+import Input from "@comp/Input"
+import Button from "@comp/Button"
+
 
 export default function Home () {
   const [userData, setUserData] = useLocal("user-data", {})
+  const inputRef = useRef()
+  const navigate = useNavigate()
 
   function handleChange ({ target }) {
     const user = { ...userData, name: target.value }
     setUserData(user)
+  }
+
+  function handleSubmit () {
+    if (inputRef.current.value.length < 3) {
+      inputRef.current.focus()
+      return
+    }
+    navigate("/quiz")
   }
 
   useEffect(() => {
@@ -15,22 +31,22 @@ export default function Home () {
   }, [])
 
   return (
-    <section className="flex flex-col gap-5">
-      <h1>Quizzer</h1>
-      <p>Ingresa tu nombre y presiona el botón para empezar</p>
-      <label htmlFor="username" className="flex flex-col">
-        Username
-        <input
-          type="text"
-          className="py-2 px-4 max-w-xs border-2"
+    <Section>
+      <Title>Quizzer</Title>
+      <Title.Sub>Insert your preferred username and begin the game!</Title.Sub>
+      <Section.Sub>
+        <Input
+          refr={ inputRef }
           id="username"
+          label="Username"
+          className="mt-12"
           onChange={ handleChange }
-          placeholder="Insert your username"
+          minLength={ 3 }
+          pattern="[a-zA-Z]+"
+          error="Username must be at least 3 characters long and only contain letters"
         />
-      </label>
-      <NavLink to="/quiz" className="py-2 px-4 border-2 bg-blue-500">
-        Empezar
-      </NavLink>
-    </section>
+        <Button onClick={ handleSubmit }>Empezar Quiz</Button>
+      </Section.Sub>
+    </Section>
   )
 }

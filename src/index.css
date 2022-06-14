@@ -11,12 +11,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.active {
-  background-color: #b1bcce;
-}
-
 .disabled {
   color: #9ca3af;
   background-color: #e5e7eb;
+  border-color: #e5e7eb;
   pointer-events: none;
+}
+
+input:focus ~ span,
+input:not(:placeholder-shown) ~ span {
+  top: -0.75rem;
+  color: #272343;
+  font-size: 1rem;
+}
+
+input:not(:focus):invalid ~ p {
+  visibility: hidden;
+}
+
+input:valid ~ p {
+  visibility: hidden;
+}
+
+input:invalid ~ p {
+  visibility: visible;
+}
+
+input:focus:invalid ~ span {
+  color: #ef4444;
 }
