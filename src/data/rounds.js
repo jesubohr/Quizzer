@@ -15,6 +15,7 @@ const EASY = [
     question: 'Who painted the Mona Lisa?',
     answer: "Leonardo da Vinci",
     options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "SandroBotticelli"],
+    points: 10,
   }
 ]
 const MEDIUM = [
@@ -46,6 +47,7 @@ const MEDIUM = [
     question: "What animal Class does dogs belongs to?",
     answer: "Mammal",
     options: ["Mammal", "Bird", "Reptile", "Fish"],
+    points: 100,
   }
 ]
 const HARD = [
@@ -65,6 +67,7 @@ const HARD = [
     question: "Which year was the first World Cup?",
     answer: "1930",
     options: ["1930", "1932", "1934", "1936"],
+    points: 1000,
   }
 ]
 const EXPERT = [
